@@ -1,0 +1,32 @@
+name: build
+on:
+  workflow_dispatch: # allows manual triggering
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+    if: ${{ always() }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - uses: cachix/install-nix-action@v18
+        with:
+          extra_nix_config: |
+            max-jobs = 10
+
+      - run: |
+         DEBIAN_FRONTEND=noninteractive
+         sudo apt-get update -q -y && sudo apt-get install -q -y qemu-system-aarch64 qemu-efi binfmt-support qemu-user-static
+         mkdir -p ~/.config/nix
+         sudo bash -c "echo system-features = aarch64-linux arm-linux >> /etc/nix/nix.conf"
+
+      - uses: cachix/cachix-action@v12
+        with:
+          name: aciceri-fleet
+          authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
+
+      - run: nix --print-build-logs --verbose build --option system aarch64-linux --option sandbox true --extra-platforms aarch64-linux

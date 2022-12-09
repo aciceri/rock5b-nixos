@@ -1,0 +1,45 @@
+{
+  "nodes": {
+    "kernel-src": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1670360826,
+        "narHash": "sha256-FAhC17ccRoDaQAMfrC5jQocLmA1butFw4VfnxOKLFPE=",
+        "owner": "samueldr",
+        "repo": "linux",
+        "rev": "11125ef30363f574fcccc2354aa9bf0948752eda",
+        "type": "github"
+      },
+      "original": {
+        "owner": "samueldr",
+        "ref": "wip/rock5-bsp-2022-12-06",
+        "repo": "linux",
+        "type": "github"
+      }
+    },
+    "nixpkgs": {
+      "locked": {
+        "lastModified": 1670424663,
+        "narHash": "sha256-jj3Pq8Co7lRem8lF9vqeBTTTs+rX3UjSuebAF+QGezw=",
+        "owner": "nixos",
+        "repo": "nixpkgs",
+        "rev": "e62dbca3771f42c81dec4e704c09ef110ef3a3f8",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nixos",
+        "ref": "nixos-unstable",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
+    "root": {
+      "inputs": {
+        "kernel-src": "kernel-src",
+        "nixpkgs": "nixpkgs"
+      }
+    }
+  },
+  "root": "root",
+  "version": 7
+}
