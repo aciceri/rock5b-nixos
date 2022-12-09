@@ -20,4 +20,4 @@ jobs:
           name: aciceri-fleet
           authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
 
-      - run: nix --print-build-logs --verbose build
+      - run: nix build -L
