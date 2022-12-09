@@ -22,10 +22,14 @@
     lib = nixpkgs.lib.extend (superLib: selfLib: {
       forAllSystems = f: selfLib.genAttrs selfLib.systems.flakeExposed (system: f system);
       evalConfig = import "${nixpkgs}/nixos/lib/eval-config.nix";
-      buildConfig = config:
+      buildConfig = hostSystem: config:
         superLib.evalConfig {
           system = "aarch64-linux";
-          modules = [config];
+          modules = [
+            config
+            ./modules/kernel/cross.nix
+            { infra.hostPlatform = hostSystem; }
+          ];
         };
     });
   in {
@@ -59,7 +63,7 @@
     };
 
     packages = lib.forAllSystems (system: {
-      rootfs = (lib.buildConfig self.nixosModules.firstBoot).config.system.build.rootfsImage;
+      rootfs = (lib.buildConfig system self.nixosModules.firstBoot).config.system.build.rootfsImage;
       default = self.packages.${system}.rootfs;
     });
   };
