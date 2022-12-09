@@ -24,7 +24,7 @@
       evalConfig = import "${nixpkgs}/nixos/lib/eval-config.nix";
       buildConfig = hostSystem: config:
         superLib.evalConfig {
-          system = "aarch64-linux";
+          system = hostSystem;
           modules = [
             config
             ./modules/kernel/cross.nix
