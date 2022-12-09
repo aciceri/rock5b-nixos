@@ -29,4 +29,4 @@ jobs:
           name: aciceri-fleet
           authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
 
-      - run: nix --print-build-logs --verbose build --option system aarch64-linux --option sandbox true --extra-platforms aarch64-linux
+      - run: nix --print-build-logs --verbose build --option system aarch64-linux --option sandbox false --extra-platforms aarch64-linux
