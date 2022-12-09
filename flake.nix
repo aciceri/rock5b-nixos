@@ -1,5 +1,5 @@
 {
-  description = "Opinionated configuration and tools for Radxa Rock5B";
+  description = "Opinionated NixOS configuration and tools for Radxa Rock5B";
 
   nixConfig = {
     extra-substituters = ["https://rock5b-nixos.cachix.org"];
