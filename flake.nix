@@ -19,7 +19,6 @@
     nixpkgs,
     kernel-src,
   }: let
-    supportedSystems = with lib.systems.supported; tier1 ++ tier2;
     lib = nixpkgs.lib.extend (superLib: selfLib: {
       forAllSystems = f: selfLib.genAttrs selfLib.systems.flakeExposed (system: f system);
       evalConfig = import "${nixpkgs}/nixos/lib/eval-config.nix";
