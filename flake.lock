@@ -3,17 +3,16 @@
     "kernel-src": {
       "flake": false,
       "locked": {
-        "lastModified": 1670360826,
-        "narHash": "sha256-FAhC17ccRoDaQAMfrC5jQocLmA1butFw4VfnxOKLFPE=",
-        "owner": "samueldr",
-        "repo": "linux",
-        "rev": "11125ef30363f574fcccc2354aa9bf0948752eda",
+        "lastModified": 1670395302,
+        "narHash": "sha256-IZdeXSvGips2OPTwXljGPTeR2Kpx70NGQGF0Cd9xa+0=",
+        "owner": "radxa",
+        "repo": "kernel",
+        "rev": "ca15bbe36e6c087c96a603db7cc491a01d9a6467",
         "type": "github"
       },
       "original": {
-        "owner": "samueldr",
-        "ref": "wip/rock5-bsp-2022-12-06",
-        "repo": "linux",
+        "owner": "radxa",
+        "repo": "kernel",
         "type": "github"
       }
     },
