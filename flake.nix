@@ -12,34 +12,52 @@
       url = "github:samueldr/linux/wip/rock5-bsp-2022-12-06";
       flake = false;
     };
+    fan-control = {
+      url = "github:pymumu/fan-control-rock5b";
+      flake = false;
+    };
   };
 
   outputs = {
     self,
     nixpkgs,
     kernel-src,
+    fan-control,
   }: let
-    lib = nixpkgs.lib.extend (superLib: selfLib: {
-      forAllSystems = f: selfLib.genAttrs selfLib.systems.flakeExposed (system: f system);
+    lib = nixpkgs.lib.extend (selfLib: superLib: {
+      supportedSystems = selfLib.intersectLists selfLib.systems.flakeExposed [
+        "x86_64-linux"
+        "aarch64-linux"
+      ];
+      forAllSystems = f: selfLib.genAttrs selfLib.supportedSystems (system: f system);
       evalConfig = import "${nixpkgs}/nixos/lib/eval-config.nix";
       buildConfig = hostSystem: config:
-        superLib.evalConfig {
+        selfLib.evalConfig {
           system = hostSystem;
           modules = [
             config
-            ./modules/cross/default.nix
+            ./modules/cross
           ];
         };
     });
   in {
     nixosModules = {
       kernel = {
-        imports = [./modules/kernel/default.nix];
+        imports = [./modules/kernel];
         _module.args = {kernelSrc = kernel-src;};
       };
 
+      fan-control = {pkgs, ...}: {
+        imports = [./modules/fan-control];
+        nixpkgs.overlays = [
+          (_: _: {
+            inherit (self.packages.${pkgs.system}) fan-control;
+          })
+        ];
+      };
+
       rootfs = {
-        imports = [./modules/rootfs/default.nix];
+        imports = [./modules/rootfs];
         _module.args = {nixpkgsPath = "${nixpkgs}";};
       };
 
@@ -63,6 +81,7 @@
 
     packages = lib.forAllSystems (system: {
       rootfs = (lib.buildConfig system self.nixosModules.firstBoot).config.system.build.rootfsImage;
+      fan-control = nixpkgs.legacyPackages.${system}.callPackage ./pkgs/fan-control {src = "${fan-control}/src";};
       default = self.packages.${system}.rootfs;
     });
   };
