@@ -3,7 +3,7 @@ on:
   workflow_dispatch: # allows manual triggering
   push:
     branches:
-      - master
+      - "*"
 
 jobs:
   build:
