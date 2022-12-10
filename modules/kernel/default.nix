@@ -20,6 +20,10 @@
         kernelPatches = [
           self.kernelPatches.bridge_stp_helper
           self.kernelPatches.request_key_helper
+        ] ++ builtins.map (patch: { inherit patch; }) [
+          ./0001-Ignore-implementation-defects-warned-by-newer-GCC.patch
+          ./0002-rk630phy-Fix-implementation.patch
+          ./0003-usb-gadget-legacy-webcam-Fix-implementation.patch
         ];
       };
     })
