@@ -2,7 +2,8 @@
   lib,
   fetchFromGitHub,
   buildLinux,
-  kernelSrc,
+  src,
+  pkgs,
   ...
 } @ args: let
   kernelVersion = "5.10.110";
@@ -61,6 +62,21 @@ in
         RK_CONSOLE_THREAD = no;
       };
 
-      src = kernelSrc;
+      inherit src;
+      kernelPatches = [
+          pkgs.kernelPatches.bridge_stp_helper
+          pkgs.kernelPatches.request_key_helper
+        ] ++ builtins.map (patch: { inherit patch; }) [
+          ./0000-Set-RK3588-FIQ-at-115200-bauds.patch
+          ./0001-Ignore-implementation-defects-warned-by-newer-GCC.patch
+          ./0002-rk630phy-Fix-implementation.patch
+          ./0003-usb-gadget-legacy-webcam-Fix-implementation.patch
+          ./0004-revert-commit-f7382476af9d5e3d94bacc769bbf23d5fafd5cdb.patch
+          ./0005-arm64-dts-rk3588-rock-5b-Use-serial-instead-of-FIQ.patch
+          ./0006-arm64-boot-dts-rk3588-rock-5b-Enable-sfc-and-SPI-Flash.patch
+          ./0007-rock-5b-Configure-FIQ-debugger-as-115200.patch
+          ./0008-rock-5b-disable-uart2-wont-bind-as-a-console.patch
+        ];
+
     }
     // (args.argsOverride or {}))

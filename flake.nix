@@ -42,9 +42,13 @@
     });
   in {
     nixosModules = {
-      kernel = {
+      kernel = {pkgs, ...}: {
         imports = [./modules/kernel];
-        _module.args = {kernelSrc = kernel-src;};
+        nixpkgs.overlays = [
+          (_: _: {
+            inherit (self.packages.${pkgs.system}) linux_rock5b;
+          })
+        ];
       };
 
       fan-control = {pkgs, ...}: {
@@ -82,6 +86,7 @@
     packages = lib.forAllSystems (system: {
       rootfs = (lib.buildConfig system self.nixosModules.firstBoot).config.system.build.rootfsImage;
       fan-control = nixpkgs.legacyPackages.${system}.callPackage ./pkgs/fan-control {src = "${fan-control}/src";};
+      linux_rock5b = nixpkgs.legacyPackages.${system}.callPackage ./pkgs/kernel {src = "${kernel-src}";};
       default = self.packages.${system}.rootfs;
     });
   };
