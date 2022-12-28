@@ -19,11 +19,11 @@
     "kernel-src": {
       "flake": false,
       "locked": {
-        "lastModified": 1670395302,
-        "narHash": "sha256-IZdeXSvGips2OPTwXljGPTeR2Kpx70NGQGF0Cd9xa+0=",
+        "lastModified": 1671793376,
+        "narHash": "sha256-Idn8XaZBE0oI/ZsXeLjSvQjY94Qen8ksLFu5sOx+5Ho=",
         "owner": "radxa",
         "repo": "kernel",
-        "rev": "ca15bbe36e6c087c96a603db7cc491a01d9a6467",
+        "rev": "b62cf4be15ea8a8fd2dc980ae39c36dc42f2f065",
         "type": "github"
       },
       "original": {
