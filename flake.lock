@@ -52,7 +52,25 @@
       "inputs": {
         "fan-control": "fan-control",
         "kernel-src": "kernel-src",
-        "nixpkgs": "nixpkgs"
+        "nixpkgs": "nixpkgs",
+        "uboot-src": "uboot-src"
+      }
+    },
+    "uboot-src": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1673525607,
+        "narHash": "sha256-52OZBfKaWQaq7t/55PXKuQrC8jcOrjb+XW41OTqYKPE=",
+        "owner": "radxa",
+        "repo": "u-boot",
+        "rev": "5753b21aa92481ec3191fdf1f4d53274590ac5aa",
+        "type": "github"
+      },
+      "original": {
+        "owner": "radxa",
+        "ref": "stable-5.10-rock5",
+        "repo": "u-boot",
+        "type": "github"
       }
     }
   },
