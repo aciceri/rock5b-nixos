@@ -16,7 +16,7 @@ index d8c7c2465f773b..6ad04907b48468 100644
  		/* If enable uart uses irq instead of fiq */
  		rockchip,irq-mode-enable = <1>;
 -		rockchip,baudrate = <1500000>;  /* Only 115200 and 1500000 */
-+		rockchip,baudrate = <115200>;  /* Only 115200 and 1500000 */
++		rockchip,baudrate = <1500000>;  /* LOL Only 115200 and 1500000 */
  		interrupts = <GIC_SPI 423 IRQ_TYPE_LEVEL_LOW>;
  		pinctrl-names = "default";
  		pinctrl-0 = <&uart2m0_xfer>;

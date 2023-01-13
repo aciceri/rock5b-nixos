@@ -17,7 +17,7 @@ index 6ccea32cdf3446..0425b6bff02320 100644
  
 +// Set to FIQ console to 115200, preferred ecosystem baud rate.
 +&fiq_debugger {
-+	rockchip,baudrate = <115200>;
++	rockchip,baudrate = <1500000>;
 +};
 +
  &sfc {

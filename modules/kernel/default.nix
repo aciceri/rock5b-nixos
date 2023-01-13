@@ -5,8 +5,8 @@
 }: {
   boot.kernelPackages = lib.mkForce pkgs.linuxPackages_rock5;
   boot.kernelParams = lib.mkAfter [
-    "console=ttyFIQ0,115200n8"
-    "console=ttyS2,115200n8"
+    "console=ttyFIQ0,1500000n8"
+    "console=ttyS2,1500000n8"
     "earlycon=uart8250,mmio32,0xfeb50000"
     "earlyprintk"
   ];

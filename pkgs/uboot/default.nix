@@ -42,18 +42,11 @@ let
     };
 
     patches = [];
-    postPatch = ''
-      substituteInPlace configs/rock-5b-rk3588_defconfig \
-        --replace 'CONFIG_DISABLE_CONSOLE=y' 'CONFIG_DISABLE_CONSOLE=n' \
-        --replace 'CONFIG_BAUDRATE=1500000' 'CONFIG_BAUDRATE=1228800'
-
-      patchShebangs tools
-      patchShebangs arch/arm/mach-rockchip
+    extraConfig = ''
+      CONFIG_DISABLE_CONSOLE=n
+      CONFIG_CMD_NVME=y
+      CONFIG_BOOTDELAY=5
     '';
-#    extraConfig = ''
-#      CONFIG_BAUDRATE=1228800
-#      CONFIG_DISABLE_CONSOLE=n
-#    '';
     extraMeta.platforms = ["aarch64-linux"];
 
     defconfig = "rock-5b-rk3588_defconfig";
@@ -70,6 +63,7 @@ let
         "rk3588_spl_loader_v1.08.111.bin"
     ];
 
+    # https://github.com/rockchip-linux/rkbin/blob/master/RKTRUST/RK3588TRUST.ini
     postBuild = ''
        cp ${radax_spi_loader} rk3588_spl_loader_v1.08.111.bin
        ./tools/mkimage -n rk3588 -T rksd -d ${rkbin}/rk35/rk3588_ddr_lp4_2112MHz_lp5_2736MHz_v1.08.bin:spl/u-boot-spl.bin idbloader.img
