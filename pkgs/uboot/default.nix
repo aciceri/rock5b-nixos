@@ -26,8 +26,14 @@ let
   '';
 
   rock5b_uboot = buildUBoot rec {
-    inherit src;
     version = "1.0.0";
+
+    src = fetchFromGitHub {
+      owner = "radxa";
+      repo = "u-boot";
+      rev = "5753b21aa92481ec3191fdf1f4d53274590ac5aa";  # branch: stable-5.10-rock5
+      sha256 = "sha256-52OZBfKaWQaq7t/55PXKuQrC8jcOrjb+XW41OTqYKPE=";
+    };
 
     rkbin = fetchFromGitHub {
       owner = "armbian";
@@ -36,16 +42,28 @@ let
       sha256 = "sha256-TvDvLpZmv/Xm1MHwoOwKmH9kGDyK42YSBxSWVSzDlZE=";
     };
 
-    radax_spi_loader = fetchurl {
-      url = "https://dl.radxa.com/rock5/sw/images/loader/rock-5b/release/rk3588_spl_loader_v1.08.111.bin";
-      sha256 = "sha256-pHZbzNJJZ5bmH2Q/PpV/ncWTU/OcP6p1leQ3msCEgN4=";
-    };
+    patches = [
+      ./000-fix.patch
+    ];
+    postPatch = ''
+      patchShebangs tools
+      patchShebangs arch/arm/mach-rockchip
+    '';
 
-    patches = [];
     extraConfig = ''
       CONFIG_DISABLE_CONSOLE=n
       CONFIG_CMD_NVME=y
       CONFIG_BOOTDELAY=5
+      CONFIG_CMD_LOG=y
+      CONFIG_LOG=y
+      CONFIG_SPL_LOG=n  # won't compile /build/source/common/log.c:141: undefined reference to `vsnprintf'
+      CONFIG_LOGLEVEL=7
+      CONFIG_LOG_MAX_LEVEL=7
+      CONFIG_SPL_LOGLEVEL=7
+      CONFIG_SPL_LOG_MAX_LEVEL=7
+      CONFIG_LOG_CONSOLE=y
+      CONFIG_LOG_TEST=n
+      CONFIG_HUSH_PARSER=y
     '';
     extraMeta.platforms = ["aarch64-linux"];
 
@@ -60,12 +78,9 @@ let
     filesToInstall = [
         "u-boot.itb"
         "idbloader.img"
-        "rk3588_spl_loader_v1.08.111.bin"
     ];
 
-    # https://github.com/rockchip-linux/rkbin/blob/master/RKTRUST/RK3588TRUST.ini
     postBuild = ''
-       cp ${radax_spi_loader} rk3588_spl_loader_v1.08.111.bin
        ./tools/mkimage -n rk3588 -T rksd -d ${rkbin}/rk35/rk3588_ddr_lp4_2112MHz_lp5_2736MHz_v1.08.bin:spl/u-boot-spl.bin idbloader.img
     '';
 

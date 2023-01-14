@@ -12,10 +12,6 @@
       url = "github:radxa/kernel";
       flake = false;
     };
-    uboot-src = {
-      url = "github:radxa/u-boot/stable-5.10-rock5";
-      flake = false;
-    };
     fan-control = {
       url = "github:pymumu/fan-control-rock5b";
       flake = false;
@@ -26,7 +22,6 @@
     self,
     nixpkgs,
     kernel-src,
-    uboot-src,
     fan-control,
   }: let
     lib = nixpkgs.lib.extend (selfLib: superLib: {
@@ -93,7 +88,7 @@
       fan-control = nixpkgs.legacyPackages.${system}.callPackage ./pkgs/fan-control {src = "${fan-control}/src";};
       linux_rock5b = nixpkgs.legacyPackages.${system}.callPackage ./pkgs/kernel {src = "${kernel-src}";};
       default = self.packages.${system}.rootfs;
-      uboot_rock5b = nixpkgs.legacyPackages.${system}.callPackage ./pkgs/uboot {src = "${uboot-src}";};
+      uboot_rock5b = nixpkgs.legacyPackages.${system}.callPackage ./pkgs/uboot { };
     });
   };
 }

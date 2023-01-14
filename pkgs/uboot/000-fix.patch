@@ -1,0 +1,44 @@
+diff --git a/arch/arm/mach-rockchip/decode_bl31.py b/arch/arm/mach-rockchip/decode_bl31.py
+index 42fa32d23d..1cff8c3a41 100755
+--- a/arch/arm/mach-rockchip/decode_bl31.py
++++ b/arch/arm/mach-rockchip/decode_bl31.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python2
++#!/usr/bin/env python3
+ #
+ # Copyright (C) 2020 Rockchip Electronics Co., Ltd
+ #
+diff --git a/include/log.h b/include/log.h
+index b63058f211..b421831690 100644
+--- a/include/log.h
++++ b/include/log.h
+@@ -113,29 +113,11 @@ int _log(enum log_category_t cat, enum log_level_t level, const char *file,
+ #define _SPL_BUILD	0
+ #endif
+ 
+-#if !_DEBUG && CONFIG_IS_ENABLED(LOG)
+-
+ #define debug_cond(cond, fmt, args...)			\
+ 	do {						\
+-		if (1)					\
+-			log(LOG_CATEGORY, LOGL_DEBUG, fmt, ##args); \
+-	} while (0)
+-
+-#else /* _DEBUG */
+-
+-/*
+- * Output a debug text when condition "cond" is met. The "cond" should be
+- * computed by a preprocessor in the best case, allowing for the best
+- * optimization.
+- */
+-#define debug_cond(cond, fmt, args...)			\
+-	do {						\
+-		if (cond)				\
+ 			printf(pr_fmt(fmt), ##args);	\
+ 	} while (0)
+ 
+-#endif /* _DEBUG */
+-
+ /* Show a message if DEBUG is defined in a file */
+ #define debug(fmt, args...)			\
+ 	debug_cond(_DEBUG, fmt, ##args)
