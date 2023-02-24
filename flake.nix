@@ -30,6 +30,7 @@
         "aarch64-linux"
       ];
       forAllSystems = f: selfLib.genAttrs selfLib.supportedSystems (system: f system);
+      pkgsCross = system: (import nixpkgs {localSystem = system; crossSystem = "aarch64-linux";});
       evalConfig = import "${nixpkgs}/nixos/lib/eval-config.nix";
       buildConfig = hostSystem: config:
         selfLib.evalConfig {
@@ -85,8 +86,8 @@
 
     packages = lib.forAllSystems (system: {
       rootfs = (lib.buildConfig system self.nixosModules.firstBoot).config.system.build.rootfsImage;
-      fan-control = nixpkgs.legacyPackages.${system}.callPackage ./pkgs/fan-control {src = "${fan-control}/src";};
-      linux_rock5b = nixpkgs.legacyPackages.${system}.callPackage ./pkgs/kernel {src = "${kernel-src}";};
+      fan-control = (lib.pkgsCross system).callPackage ./pkgs/fan-control {src = "${fan-control}/src";};
+      linux_rock5b = (lib.pkgsCross system).callPackage ./pkgs/kernel {src = "${kernel-src}";};
       default = self.packages.${system}.rootfs;
     });
   };
