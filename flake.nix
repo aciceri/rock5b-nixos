@@ -43,11 +43,11 @@
     });
   in {
     nixosModules = {
-      kernel = {pkgs, ...}: {
+      kernel = {config, ...}: {
         imports = [./modules/kernel];
         nixpkgs.overlays = [
           (_: _: {
-            inherit (self.packages.${pkgs.system}) linux_rock5b;
+            inherit (self.packages.${config.nixpkgs.localSystem.system}) linux_rock5b;
           })
         ];
       };
@@ -80,6 +80,7 @@
       default = {
         imports = [
           self.nixosModules.kernel
+          self.nixosModules.fan-control
         ];
       };
     };
