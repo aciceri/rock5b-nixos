@@ -52,11 +52,11 @@
         ];
       };
 
-      fan-control = {pkgs, ...}: {
+      fan-control = {config, ...}: {
         imports = [./modules/fan-control];
         nixpkgs.overlays = [
           (_: _: {
-            inherit (self.packages.${pkgs.system}) fan-control;
+            inherit (self.packages.${config.nixpkgs.localSystem.system}) fan-control;
           })
         ];
       };
