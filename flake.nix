@@ -103,7 +103,7 @@
         src = "${kernel-src}";
       };
       
-      tow-boot = (import tow-boot {
+      uboot = (import tow-boot {
         pkgs = import "${tow-boot}/nixpkgs.nix" {
           localSystem = system;
         };
