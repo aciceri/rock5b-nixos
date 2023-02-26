@@ -24,7 +24,7 @@
         }:
           callPackage "${nixpkgsPath}/nixos/lib/make-ext4-fs.nix" ({
               inherit (config.sdImage) storePaths;
-              compressImage = config.sdImage.compressImage;
+              compressImage = false;
               populateImageCommands = populateCommands;
               volumeLabel = config.fileSystems."/".label;
             }
