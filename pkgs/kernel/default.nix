@@ -38,6 +38,7 @@ in
         RSI_91X = no;
         RSI_SDIO = no;
         RSI_USB = no;
+        WLAN_VENDOR_BROADCOM = no;
 
         # Driver conflicts with the mainline ones
         # > error: the following would cause module name conflict:

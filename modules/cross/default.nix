@@ -12,6 +12,7 @@ in
       nixpkgs.overlays = [
         (final: super: {
           # Workaround for modules expected by NixOS not being built more often than not.
+          # TODO Do we still need this?
           makeModulesClosure = x: super.makeModulesClosure (x // {allowMissing = true;});
         })
       ];

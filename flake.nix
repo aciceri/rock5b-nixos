@@ -12,6 +12,10 @@
       url = "github:radxa/kernel";
       flake = false;
     };
+    tow-boot = {
+      url = "github:aciceri/Tow-Boot/rock5b";
+      flake = false;
+    };
     fan-control = {
       url = "github:pymumu/fan-control-rock5b";
       flake = false;
@@ -22,6 +26,7 @@
     self,
     nixpkgs,
     kernel-src,
+    tow-boot,  
     fan-control,
   }: let
     lib = nixpkgs.lib.extend (selfLib: superLib: {
@@ -40,22 +45,24 @@
           ];
         };
     });
+    pkgs = nixpkgs.legacyPackages;
+    pkgsCross = system: (import nixpkgs {localSystem = system; crossSystem = "aarch64-linux";});
   in {
     nixosModules = {
-      kernel = {pkgs, ...}: {
+      kernel = {config, ...}: {
         imports = [./modules/kernel];
         nixpkgs.overlays = [
           (_: _: {
-            inherit (self.packages.${pkgs.system}) linux_rock5b;
+            inherit (self.packages.${config.nixpkgs.localSystem.system}) linux_rock5b;
           })
         ];
       };
 
-      fan-control = {pkgs, ...}: {
+      fan-control = {config, ...}: {
         imports = [./modules/fan-control];
         nixpkgs.overlays = [
           (_: _: {
-            inherit (self.packages.${pkgs.system}) fan-control;
+            inherit (self.packages.${config.nixpkgs.localSystem.system}) fan-control;
           })
         ];
       };
@@ -79,15 +86,45 @@
       default = {
         imports = [
           self.nixosModules.kernel
+          self.nixosModules.fan-control
         ];
       };
     };
 
     packages = lib.forAllSystems (system: {
+      
       rootfs = (lib.buildConfig system self.nixosModules.firstBoot).config.system.build.rootfsImage;
-      fan-control = nixpkgs.legacyPackages.${system}.callPackage ./pkgs/fan-control {src = "${fan-control}/src";};
-      linux_rock5b = nixpkgs.legacyPackages.${system}.callPackage ./pkgs/kernel {src = "${kernel-src}";};
-      default = self.packages.${system}.rootfs;
+      
+      fan-control = (pkgsCross system).callPackage ./pkgs/fan-control {
+        src = "${fan-control}/src";
+      };
+      
+      linux_rock5b = (pkgsCross system).callPackage ./pkgs/kernel {
+        src = "${kernel-src}";
+      };
+      
+      tow-boot = (import tow-boot {
+        pkgs = import "${tow-boot}/nixpkgs.nix" {
+          localSystem = system;
+        };
+        configuration.nixpkgs.localSystem.system = system;
+      }).radxa-rock5b;
+
+      flash = pkgs.${system}.callPackage ./pkgs/flash {
+        inherit (self.packages.${system}) rootfs tow-boot;
+      };
+      
+      default = self.packages.${system}.rootfs;       
     });
+
+    apps = lib.forAllSystems (system: {
+      flash = {
+        type = "app";
+        program = "${self.packages.${system}.flash}/bin/flash";
+      };
+      default = self.apps.${system}.flash;
+    });
+
+    formatter = lib.forAllSystems (system: pkgs.${system}.alejandra);
   };
 }

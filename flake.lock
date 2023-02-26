@@ -19,11 +19,11 @@
     "kernel-src": {
       "flake": false,
       "locked": {
-        "lastModified": 1670395302,
-        "narHash": "sha256-IZdeXSvGips2OPTwXljGPTeR2Kpx70NGQGF0Cd9xa+0=",
+        "lastModified": 1676631659,
+        "narHash": "sha256-TjAF7BPSDy5iHSk8byp+vsKop0V+rqrmr+TXLqXLB2M=",
         "owner": "radxa",
         "repo": "kernel",
-        "rev": "ca15bbe36e6c087c96a603db7cc491a01d9a6467",
+        "rev": "a9583fb47e9b96c552f458a376207141602c0025",
         "type": "github"
       },
       "original": {
@@ -52,7 +52,25 @@
       "inputs": {
         "fan-control": "fan-control",
         "kernel-src": "kernel-src",
-        "nixpkgs": "nixpkgs"
+        "nixpkgs": "nixpkgs",
+        "tow-boot": "tow-boot"
+      }
+    },
+    "tow-boot": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1677346757,
+        "narHash": "sha256-3SKlcZhfUaNz1bd/l/1B3D66NUk3sALVIyP8DHv41SU=",
+        "owner": "aciceri",
+        "repo": "Tow-Boot",
+        "rev": "85d099f3473effdeca409bd165175d64dfb37ecc",
+        "type": "github"
+      },
+      "original": {
+        "owner": "aciceri",
+        "ref": "rock5b",
+        "repo": "Tow-Boot",
+        "type": "github"
       }
     }
   },
