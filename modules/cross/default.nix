@@ -5,7 +5,7 @@
 }: let
   inherit (config.nixpkgs) localSystem;
   selectedPlatform = lib.systems.elaborate "aarch64-linux";
-  isCross = localSystem != selectedPlatform.system;
+  isCross = localSystem.system != selectedPlatform.system;
 in
   lib.mkMerge [
     {
