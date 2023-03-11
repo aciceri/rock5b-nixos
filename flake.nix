@@ -3,8 +3,11 @@
 
   inputs = {
     flake-parts.url = "github:hercules-ci/flake-parts";
-    nixpkgs.url = "github:nixos/nixpkgs/f2537a505d45c31fe5d9c27ea9829b6f4c4e6ac5";
-    treefmt-nix.url = "github:numtide/treefmt-nix";
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+    treefmt-nix = {
+      url = "github:numtide/treefmt-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     kernel-src = {
       url = "github:radxa/kernel";
       flake = false;

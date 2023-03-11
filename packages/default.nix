@@ -10,10 +10,10 @@
     pkgs,
     ...
   }: let
-    pkgsCross = system: (import inputs.nixpkgs {
+    pkgsCross = import inputs.nixpkgs {
       localSystem = system;
       crossSystem = "aarch64-linux";
-    });
+    };
     evalConfig = import "${inputs.nixpkgs}/nixos/lib/eval-config.nix";
     buildConfig = hostSystem: config:
       evalConfig {
@@ -27,11 +27,11 @@
     packages = {
       rootfs = (buildConfig system self.nixosModules.firstBoot).config.system.build.rootfsImage;
 
-      fan-control = (pkgsCross system).callPackage ./fan-control {
+      fan-control = pkgsCross.callPackage ./fan-control {
         src = "${inputs.fan-control}/src";
       };
 
-      linux_rock5b = (pkgsCross system).callPackage ./kernel {
+      linux_rock5b = pkgsCross.callPackage ./kernel {
         src = "${inputs.kernel-src}";
       };
 
@@ -42,7 +42,7 @@
           };
           configuration.nixpkgs.localSystem.system = system;
         })
-        .radxa-rock5b;
+          .radxa-rock5b;
 
       flash = pkgs.callPackage ./flash {
         inherit (self'.packages) rootfs tow-boot;
