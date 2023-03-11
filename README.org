@@ -1,0 +1,25 @@
+* NixOS on Radxa Rock 5B
+
+#+begin_quote
+:warning: This is incomplete and untested! I take no responsibility for this.
+#+end_quote
+
+This repo contains my opinionated infrastructure to run NixOS on the [[https://wiki.radxa.com/Rock5/5b][Radxa Rock 5B]].
+It also provides a substituer (powered by Cachix) and it supports cross compilation.
+
+
+** How to flash the eMMC
+
+A no brain automatic flashing script is in progress, meanwhile:
+
+#+begin_src sh
+  # delete all partitions on /dev/sda (assuming it is the eMMC)
+  $ nix build .#uboot
+  $ sudo dd if=result/shared.disk-image.img of=/dev/sda
+  $ nix build .#rootfs
+  # create a new partion /dev/sda2 in the remaining free space
+  $ sudo dd if=$(readlink result) of=/dev/sda2 status=progress
+  # mark /dev/sda2 as legacy bootable (for example using fdisk advanced options)
+#+end_src
+
+I haven't tested (yet) booting from other devices but I heard of people being able to do so.
