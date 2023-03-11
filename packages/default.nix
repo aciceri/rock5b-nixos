@@ -44,18 +44,19 @@
         gbmSupport = true;
         jre_headless = pkgs.jdk11_headless;
       };
-      
+
       uboot =
         (import inputs.tow-boot {
           pkgs = import "${inputs.tow-boot}/nixpkgs.nix" {
             localSystem = system;
+            crossSystem = "aarch64-linux";
           };
           configuration.nixpkgs.localSystem.system = system;
         })
-          .radxa-rock5b;
+        .radxa-rock5b;
 
       flash = pkgs.callPackage ./flash {
-        inherit (config.packages) rootfs tow-boot;
+        inherit (config.packages) rootfs uboot;
       };
 
       default = config.packages.rootfs;

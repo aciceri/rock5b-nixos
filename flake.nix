@@ -14,7 +14,7 @@
     };
     panfork = {
       url = "gitlab:panfork/mesa";
-      flake= false;
+      flake = false;
     };
     tow-boot = {
       url = "github:aciceri/Tow-Boot/rock5b";

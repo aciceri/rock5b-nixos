@@ -5,13 +5,21 @@
 }: {
   flake.nixosModules = {
     kernel = ./kernel;
+
     panfork = ./panfork;
+
     fan-control = ./fan-control;
+
     cross = ./cross;
 
     rootfs = {
       imports = [./rootfs];
-      _module.args = {nixpkgsPath = "${inputs.nixpkgs}";};
+      _module.args.nixpkgsPath = "${inputs.nixpkgs}";
+    };
+
+    apply-overlay = {
+      imports = [./apply-overlay];
+      _module.args.rock5bFlake = self;
     };
 
     firstBoot = {
@@ -25,21 +33,13 @@
       users.users.root.password = "";
     };
 
-    default = {lib, ...}: {
-      nixpkgs = {
-        overlays = [
-          self.overlays.default
-        ];
-        hostPlatform = lib.mkForce {
-          config = "aarch64-unknown-linux-gnu";
-          system = "aarch64-linux";
-        };
-      };
+    default = {
       imports = [
+        self.nixosModules.apply-overlay
         self.nixosModules.kernel
         self.nixosModules.panfork
         self.nixosModules.fan-control
-        # self.nixosModules.cross
+        self.nixosModules.cross
       ];
     };
   };

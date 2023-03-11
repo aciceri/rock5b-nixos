@@ -1,10 +1,16 @@
-{src, mesa, ...}: (mesa.override {
+{
+  src,
+  mesa,
+  ...
+}:
+(mesa.override {
   enableOSMesa = false;
-  vulkanDrivers=[];
+  vulkanDrivers = [];
   vulkanLayers = [];
   galliumDrivers = ["panfrost"];
-}).overrideAttrs (old: {
+})
+.overrideAttrs (old: {
   inherit src;
   name = "mesa-panfork";
-  mesonFlags = old.mesonFlags ++ [ "-Dllvm=disabled" ];
+  mesonFlags = old.mesonFlags ++ ["-Dllvm=disabled"];
 })

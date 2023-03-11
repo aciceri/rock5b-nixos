@@ -2,7 +2,7 @@
   imports = [
     inputs.flake-parts.flakeModules.easyOverlay
   ];
-  perSystem = { config, ... }: {
+  perSystem = {config, ...}: {
     overlayAttrs = {
       mesa = config.packages.mesa-panfork;
       kodi-rock5b = config.packages.kodi;
