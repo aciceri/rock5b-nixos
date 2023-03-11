@@ -84,12 +84,29 @@
         "type": "github"
       }
     },
+    "panfork": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1670633863,
+        "narHash": "sha256-4eZHMiYS+sRDHNBtLZTA8ELZnLns7yT3USU5YQswxQ0=",
+        "owner": "panfork",
+        "repo": "mesa",
+        "rev": "120202c675749c5ef81ae4c8cdc30019b4de08f4",
+        "type": "gitlab"
+      },
+      "original": {
+        "owner": "panfork",
+        "repo": "mesa",
+        "type": "gitlab"
+      }
+    },
     "root": {
       "inputs": {
         "fan-control": "fan-control",
         "flake-parts": "flake-parts",
         "kernel-src": "kernel-src",
         "nixpkgs": "nixpkgs",
+        "panfork": "panfork",
         "tow-boot": "tow-boot",
         "treefmt-nix": "treefmt-nix"
       }

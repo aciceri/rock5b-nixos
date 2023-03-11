@@ -4,10 +4,11 @@
   pkgs,
   ...
 }: {
-  options.rock5b-fan-control = {
+  options.services.rock5b-fan-control = {
     enable = lib.mkEnableOption {
       default = true;
     };
+    package = lib.mkPackageOption pkgs "fan-control-rock5b" {};
     settings = lib.mkOption {
       description = "Settings for Radxa Rock 5B";
       type = lib.types.attrs;
@@ -56,7 +57,7 @@
     };
   };
 
-  config = lib.mkIf config.rock5b-fan-control.enable {
+  config = lib.mkIf config.services.rock5b-fan-control.enable {
     systemd.services.fan-control = {
       description = "Fan control for Radxa Rock5B";
       after = ["networking.target"];
@@ -65,7 +66,7 @@
       serviceConfig = {
         Type = "forking";
         PIDFile = "/run/fan-control.pid";
-        ExecStart = "${pkgs.fan-control}/bin/fan-control -d -p /run/fan-control.pid";
+        ExecStart = "${config.services.rock5b-fan-control.package}/bin/fan-control -d -p /run/fan-control.pid";
         Restart = "always";
         RestartSec = "2";
         TimeoutStopSec = "15";

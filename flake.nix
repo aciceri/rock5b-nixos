@@ -12,6 +12,10 @@
       url = "github:radxa/kernel";
       flake = false;
     };
+    panfork = {
+      url = "gitlab:panfork/mesa";
+      flake= false;
+    };
     tow-boot = {
       url = "github:aciceri/Tow-Boot/rock5b";
       flake = false;
@@ -27,6 +31,7 @@
       imports = [
         ./modules
         ./packages
+        ./overlays
         ./apps
         ./formatting
       ];

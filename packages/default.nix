@@ -6,7 +6,7 @@
   perSystem = {
     lib,
     system,
-    self',
+    config,
     pkgs,
     ...
   }: let
@@ -28,13 +28,23 @@
       rootfs = (buildConfig system self.nixosModules.firstBoot).config.system.build.rootfsImage;
 
       fan-control = pkgsCross.callPackage ./fan-control {
-        src = "${inputs.fan-control}/src";
+        src = "${inputs.fan-control.outPath}/src";
       };
 
-      linux_rock5b = pkgsCross.callPackage ./kernel {
-        src = "${inputs.kernel-src}";
+      linux-rock5b = pkgsCross.callPackage ./kernel {
+        src = inputs.kernel-src.outPath;
       };
 
+      panfork = pkgsCross.callPackage ./panfork {
+        src = inputs.panfork.outPath;
+      };
+
+      kodi = pkgsCross.callPackage ./kodi {
+        x11Support = false;
+        gbmSupport = true;
+        jre_headless = pkgs.jdk11_headless;
+      };
+      
       uboot =
         (import inputs.tow-boot {
           pkgs = import "${inputs.tow-boot}/nixpkgs.nix" {
@@ -45,10 +55,10 @@
           .radxa-rock5b;
 
       flash = pkgs.callPackage ./flash {
-        inherit (self'.packages) rootfs tow-boot;
+        inherit (config.packages) rootfs tow-boot;
       };
 
-      default = self'.packages.rootfs;
+      default = config.packages.rootfs;
     };
   };
 }
