@@ -64,10 +64,12 @@ in
       };
 
       inherit src;
-      kernelPatches = [
+      kernelPatches =
+        [
           pkgs.kernelPatches.bridge_stp_helper
           pkgs.kernelPatches.request_key_helper
-        ] ++ builtins.map (patch: { inherit patch; }) [
+        ]
+        ++ builtins.map (patch: {inherit patch;}) [
           ./0000-Set-RK3588-FIQ-at-115200-bauds.patch
           ./0001-Ignore-implementation-defects-warned-by-newer-GCC.patch
           ./0002-rk630phy-Fix-implementation.patch
@@ -78,6 +80,5 @@ in
           ./0007-rock-5b-Configure-FIQ-debugger-as-115200.patch
           ./0008-rock-5b-disable-uart2-wont-bind-as-a-console.patch
         ];
-
     }
     // (args.argsOverride or {}))

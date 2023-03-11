@@ -3,12 +3,15 @@
   rootfs,
   tow-boot,
   ...
-}: pkgs.writeShellApplication {
+}:
+pkgs.writeShellApplication {
   name = "flash";
-  text = ''
-    TOW_BOOT=${tow-boot}/shared.disk-image.img
-    ROOTFS_ZST=${rootfs}
-  '' + builtins.readFile ./flash.sh;
+  text =
+    ''
+      TOW_BOOT=${tow-boot}/shared.disk-image.img
+      ROOTFS_ZST=${rootfs}
+    ''
+    + builtins.readFile ./flash.sh;
   runtimeInputs = with pkgs; [
     coreutils
     zstd

@@ -19,15 +19,16 @@
     };
   };
 
-  outputs = inputs@{ flake-parts, ...}: flake-parts.lib.mkFlake {inherit inputs;} {
-    imports = [
-      ./modules
-      ./packages
-      ./apps
-      ./formatting
-    ];
-    systems = [ "x86_64-linux" "aarch64-linux" ];
-  };
+  outputs = inputs @ {flake-parts, ...}:
+    flake-parts.lib.mkFlake {inherit inputs;} {
+      imports = [
+        ./modules
+        ./packages
+        ./apps
+        ./formatting
+      ];
+      systems = ["x86_64-linux" "aarch64-linux"];
+    };
 
   nixConfig = {
     extra-substituters = ["https://rock5b-nixos.cachix.org"];

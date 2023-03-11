@@ -1,7 +1,4 @@
-{
-  inputs,
-  ...
-}: {
+{inputs, ...}: {
   imports = [
     inputs.treefmt-nix.flakeModule
   ];
@@ -10,6 +7,5 @@
       projectRootFile = ".git/config";
       programs.alejandra.enable = true;
     };
-    packages.formatter = pkgs.alejandra;
   };
 }
