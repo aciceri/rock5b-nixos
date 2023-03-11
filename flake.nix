@@ -41,7 +41,7 @@
           system = hostSystem;
           modules = [
             config
-            ./modules/cross
+            self.nixosModules.cross
           ];
         };
     });
@@ -58,6 +58,8 @@
         ];
       };
 
+      cross = ./modules/cross;  
+      
       fan-control = {config, ...}: {
         imports = [./modules/fan-control];
         nixpkgs.overlays = [
@@ -87,6 +89,7 @@
         imports = [
           self.nixosModules.kernel
           self.nixosModules.fan-control
+          self.nixosModules.cross
         ];
       };
     };
