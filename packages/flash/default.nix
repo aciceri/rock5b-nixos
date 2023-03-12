@@ -1,14 +1,14 @@
 {
   pkgs,
   rootfs,
-  tow-boot,
+  uboot,
   ...
 }:
 pkgs.writeShellApplication {
   name = "flash";
   text =
     ''
-      TOW_BOOT=${tow-boot}/shared.disk-image.img
+      TOW_BOOT=${uboot}/shared.disk-image.img
       ROOTFS_ZST=${rootfs}
     ''
     + builtins.readFile ./flash.sh;
