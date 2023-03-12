@@ -13,7 +13,7 @@
     cross = ./cross;
 
     rootfs = {
-      imports = [./rootfs];
+      imports = [./rootfs self.nixosModules.cross];
       _module.args.nixpkgsPath = "${inputs.nixpkgs}";
     };
 
@@ -39,7 +39,6 @@
         self.nixosModules.kernel
         self.nixosModules.panfork
         self.nixosModules.fan-control
-        self.nixosModules.cross
       ];
     };
   };
