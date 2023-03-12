@@ -10,14 +10,11 @@
   dynamicOverlay =
     if isCross
     then
-      (self: super: {
-        inherit
-          (rock5bFlake.packages.${localSystem.system})
-          mesa
-          kodi-rock5b
-          fan-control-rock5b
-          linux-rock5b
-          ;
+      (self: super: with (rock5bFlake.packages.${localSystem.system}); {
+        inherit linux-rock5b;
+        fan-control = fan-control-rock5b;
+        kodi-rock5b = kodi;
+        mesa = panfork;
       })
     else rock5bFlake.overlays.default;
 in {
