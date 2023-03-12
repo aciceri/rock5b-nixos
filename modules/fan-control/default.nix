@@ -73,6 +73,6 @@
       };
     };
 
-    environment.etc."fan-control.json".text = builtins.toJSON config.rock5b-fan-control.settings;
+    environment.etc."fan-control.json".text = builtins.toJSON config.services.rock5b-fan-control.settings;
   };
 }

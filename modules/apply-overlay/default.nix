@@ -13,7 +13,7 @@
       (self: super:
         with (rock5bFlake.packages.${localSystem.system}); {
           inherit linux-rock5b;
-          fan-control = fan-control-rock5b;
+          fan-control-rock5b = fan-control;
           kodi-rock5b = kodi;
           mesa = panfork;
         })
