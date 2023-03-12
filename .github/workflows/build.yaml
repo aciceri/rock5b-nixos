@@ -23,6 +23,6 @@ jobs:
           name: rock5b-nixos
           authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
 
-      # - run: nix flake check -L
+      - run: nix flake check -L
           
       - run: nix build -L
