@@ -1,8 +1,8 @@
 {inputs, ...}: {
-  perSystem = {self', ...}: {
+  perSystem = {config, ...}: {
     apps = {
-      flash.program = "${self'.packages.flash}/bin/flash";
-      default = self'.apps.flash;
+      flash.program = "${config.packages.flash}/bin/flash";
+      default = config.apps.flash;
     };
   };
 }
