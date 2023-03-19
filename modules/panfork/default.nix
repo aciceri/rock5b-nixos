@@ -12,11 +12,11 @@
         })
     ];
 
-    opengl.extraPackages = with pkgs; [
-      # TODO are these needed?
-      vaapiVdpau
-      libvdpau-va-gl
-    ];
+    opengl = {
+      driSupport = true;
+      setLdLibraryPath = true;
+      enable = true;
+    };
   };
 
   services.udev.extraRules = ''
@@ -24,5 +24,6 @@
     KERNEL=="rga", MODE="0660", GROUP="video"
     KERNEL=="system-dma32", MODE="0666", GROUP="video"
     KERNEL=="system-uncached-dma32", MODE="0666", GROUP="video" RUN+="${pkgs.busybox}/bin/chmod a+rw /dev/dma_heap"
+    KERNEL=="system-uncached", MODE="0666", GROUP="video"
   '';
 }

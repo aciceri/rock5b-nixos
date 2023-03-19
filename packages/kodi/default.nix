@@ -129,7 +129,7 @@
   libinput,
   buildPackages,
 }:
-assert usbSupport -> !udevSupport; # libusb-compat-0_1 won't be used if udev is avaliable
+assert usbSupport -> !udevSupport; # libusb-compat-0_1 won't be used if udev is available
 
 assert gbmSupport || waylandSupport || x11Support; let
   kodiReleaseDate = "20230115";
@@ -139,32 +139,67 @@ assert gbmSupport || waylandSupport || x11Support; let
   kodi_src = fetchFromGitHub {
     owner = "xbmc";
     repo = "xbmc";
-    rev = "645f65495234e41e8912be40c0aabed098b8772d";
-    sha256 = "sha256-mELAzJMaXDTk7/zYzhILIYZQoJbrDmq5Q1SMi8AE84U=";
+    rev = "${kodiVersion}-${rel}";
+    sha256 = "sha256-0BkbA1iovouwjQVtiKFw3+64i7sMWZNiCUfOQ0EsslY=";
   };
+
+  rockchip_mpp = stdenv.mkDerivation {
+    name = "rockchip_mpp";
+    version = "develop";
+
+    src = fetchFromGitHub {
+      owner = "martivo";
+      repo = "mpp";
+      rev = "38afa760be814dbbf32019b6c588be8304c1e486";
+      sha256 = "oEqudYdo4x9cIfdLFqWUtrMd4w1ftUIS2YiN8IkKaYE=";
+    };
+
+    postPatch = ''
+      substituteInPlace pkgconfig/rockchip_mpp.pc.cmake \
+        --replace 'libdir=''${prefix}/'     'libdir=' \
+        --replace 'includedir=''${prefix}/' 'includedir='
+      substituteInPlace pkgconfig/rockchip_vpu.pc.cmake \
+        --replace 'libdir=''${prefix}/'     'libdir=' \
+        --replace 'includedir=''${prefix}/' 'includedir='
+    '';
+
+    nativeBuildInputs = [cmake];
+
+    outputs = ["lib" "dev" "out"];
+  };
+
+  # see https://github.com/xbmc/xbmc/blob/${kodiVersion}-${rel}/tools/depends/target/ to get suggested versions for all dependencies
 
   ffmpeg = stdenv.mkDerivation rec {
     pname = "kodi-ffmpeg";
-    version = "5.1.2"; # see https://github.com/xbmc/xbmc/blob/${kodiVersion}-${rel}/tools/depends/target/ffmpeg/FFMPEG-VERSION
+    version = "4.4.1";
     src = fetchFromGitHub {
-      owner = "JeffyCN";
+      owner = "xbmc";
       repo = "FFmpeg";
-      rev = "66b6b2ae02c717a2016845543805b4eed01728b1";
-      sha256 = "sha256-LEP8pTo9u3woQxPlQzbLgezxD6EdLqfW6nrMQgP8dw0=";
+      rev = "${version}-${rel}-Alpha1";
+      sha256 = "EQHmmWnDw+/udKYq7Nrf00nL7I5XWUtmzdauDryfTII=";
     };
+    patches = [
+      ./0001-JeffyCN.patch
+    ];
     preConfigure = ''
       cp ${kodi_src}/tools/depends/target/ffmpeg/{CMakeLists.txt,*.cmake} .
       sed -i 's/ --cpu=''${CPU}//' CMakeLists.txt
       sed -i 's/--strip=''${CMAKE_STRIP}/--strip=''${CMAKE_STRIP} --ranlib=''${CMAKE_RANLIB}/' CMakeLists.txt
+      sed -i 's/--enable-gpl/--enable-gpl --enable-version3 --enable-libdrm/' CMakeLists.txt
     '';
-    cmakeFlags = lib.optionals (stdenv.hostPlatform != stdenv.buildPlatform) [
-      "-DCROSSCOMPILING=ON"
-      "-DCPU=${stdenv.hostPlatform.parsed.cpu.name}"
-      "-DOS=${stdenv.hostPlatform.parsed.kernel.name}"
-      "-DPKG_CONFIG_EXECUTABLE=pkg-config"
-    ];
+    cmakeFlags =
+      [
+        "-DEXTRA_FLAGS=--enable-rkmpp" # also --enable-libdrm?
+      ]
+      ++ lib.optionals (stdenv.hostPlatform != stdenv.buildPlatform) [
+        "-DCROSSCOMPILING=ON"
+        "-DCPU=${stdenv.hostPlatform.parsed.cpu.name}"
+        "-DOS=${stdenv.hostPlatform.parsed.kernel.name}"
+        "-DPKG_CONFIG_EXECUTABLE=pkg-config"
+      ];
     buildInputs =
-      [libidn libtasn1 p11-kit zlib libva]
+      [libidn libtasn1 p11-kit zlib libva rockchip_mpp libdrm]
       ++ lib.optional vdpauSupport libvdpau;
     nativeBuildInputs = [cmake nasm pkg-config gnutls];
   };
@@ -425,7 +460,7 @@ in
 
     passthru = {
       pythonPackages = python3Packages;
-      ffmpeg = ffmpeg;
+      inherit ffmpeg;
     };
 
     meta = with lib; {

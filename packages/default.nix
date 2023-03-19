@@ -43,10 +43,10 @@
         src = inputs.panfork.outPath;
       };
 
-      kodi = pkgsCross.callPackage ./kodi {
+      kodi = pkgsCross.callPackage ./kodi rec {
         x11Support = false;
         gbmSupport = true;
-        jre_headless = pkgs.jdk11_headless;
+        mesa = self.packages.aarch64-linux.panfork;
       };
 
       uboot =
