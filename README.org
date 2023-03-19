@@ -22,4 +22,43 @@ A no brain automatic flashing script is in progress, meanwhile:
   # mark /dev/sda2 as legacy bootable (for example using fdisk advanced options)
 #+end_src
 
-I haven't tested (yet) booting from other devices but I heard of people being able to do so.
+I haven't tested (yet) booting from other devices but I heard of
+people being able to do so.
+
+** Panfork
+
+Mesa is overriden with [[https://gitlab.com/panfork/mesa][panfork]] by a Nix overlay, a panfrost fork
+supporting the Mail G610, another Nix module automatically loads the
+proprietary firmware blob (which is redistributed by this flake).
+
+I've tried to rebuild Sway with it and it seems to work but I can't
+guarantee anything since it's not something that I use on this board.
+Softwares depending on Mesa need to be rebuilded then, personally I
+only use Kodi for now.
+
+*** Kodi
+
+I'll try to maintain a working Kodi supporting hardware
+acceleration. Unfortunately I couldn't override ~kodi~ from ~nixpkgs~
+because of how the Nix code is written, many dependencies that I
+needed to change were hardcoded and not passed using the ~callPackage~
+idiom.
+
+I had to override ~ffmpeg~ and ~mpp~ with Rockchip forks. Unfortunately
+for ~mpp~ I had to use this [[https://github.com/martivo/mpp/commit/38afa760be814dbbf32019b6c588be8304c1e486][further fork]] (thanks @martivo).
+I also have to thank @amazingfate that guided me in solving the
+problems encountered (many).
+
+To get hardware acceleration you need to start kodi (which is built to
+be used with GBM as a standalone application) with an user in the
+~video~ group (UDEV rules are provided in a Nix module in this flake)
+and you must enable "DRM PRIME acceleration" and set the "render
+method" to "direct to plane" in the player settings of kodi.
+This way I've been able to play 4k h264 and h265/hvec videos, only
+following two problems are noticed:
+
+- Cannot play videos with HDR (no crash but video is black)
+- When UI elements appear during playback (for instance when you pause
+  a movie) the video gets black. As soon as they disappear video
+  reappears. The playback is not stopped, audio doesn't stop, only the
+  video is altered. Not the end of the world but a bit annoying.
