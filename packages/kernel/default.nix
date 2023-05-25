@@ -9,9 +9,7 @@
   kernelVersion = "5.10.110";
   vendorVersion = "";
   version = "${kernelVersion}${vendorVersion}";
-in
-  buildLinux (args
-    // {
+  buildArgs = {
       inherit version;
 
       # https://github.com/radxa/build/blob/428769f2ab689de27927af4bc8e7a9941677c366/board_configs.sh#L304
@@ -80,5 +78,8 @@ in
           ./0007-rock-5b-Configure-FIQ-debugger-as-115200.patch
           ./0008-rock-5b-disable-uart2-wont-bind-as-a-console.patch
         ];
-    }
-    // (args.argsOverride or {}))
+    };
+in
+  buildLinux (args
+    // buildArgs
+    // ((args.argsOverride or (_: {})) buildArgs))
