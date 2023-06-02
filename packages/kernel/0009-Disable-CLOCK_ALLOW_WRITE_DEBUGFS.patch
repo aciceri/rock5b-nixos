@@ -1,0 +1,22 @@
+From 6c29638292e3a425e4c4e1a45d2d44f8d78b42dc Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?M=2E=20Efe=20=C3=87etin?= <efectn@protonmail.com>
+Date: Mon, 13 Mar 2023 18:06:54 +0300
+Subject: [PATCH] Disable CLOCK_ALLOW_WRITE_DEBUGFS
+
+---
+ drivers/clk/clk.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/clk/clk.c b/drivers/clk/clk.c
+index bec8819414834..f5f3e9db05ad0 100644
+--- a/drivers/clk/clk.c
++++ b/drivers/clk/clk.c
+@@ -3107,7 +3107,7 @@ static int clk_dump_show(struct seq_file *s, void *data)
+ }
+ DEFINE_SHOW_ATTRIBUTE(clk_dump);
+ 
+-#define CLOCK_ALLOW_WRITE_DEBUGFS
++#undef CLOCK_ALLOW_WRITE_DEBUGFS
+ #ifdef CLOCK_ALLOW_WRITE_DEBUGFS
+ /*
+  * This can be dangerous, therefore don't provide any real compile time
