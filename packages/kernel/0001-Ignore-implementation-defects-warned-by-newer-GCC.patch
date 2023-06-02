@@ -29,25 +29,10 @@ index bcc1c1267d0c7c..a89a5339807372 100644
 @@ -1,6 +1,9 @@
  # SPDX-License-Identifier: GPL-2.0
  # Makefile for Linux PHY drivers
- 
+
 +# ¯\_(ツ)_/¯
 +CFLAGS_rk630phy.o += -Wno-error=incompatible-pointer-types
 +
  libphy-y			:= phy.o phy-c45.o phy-core.o phy_device.o \
  				   linkmode.o
  mdio-bus-y			+= mdio_bus.o mdio_device.o
-diff --git a/drivers/soc/rockchip/Makefile b/drivers/soc/rockchip/Makefile
-index 8f9439271fc383..07a92dbc90a844 100644
---- a/drivers/soc/rockchip/Makefile
-+++ b/drivers/soc/rockchip/Makefile
-@@ -2,6 +2,10 @@
- #
- # Rockchip Soc drivers
- #
-+
-+# ¯\_(ツ)_/¯
-+CFLAGS_iomux.o += -Wno-error=implicit-int
-+
- obj-$(CONFIG_ROCKCHIP_AMP) += rockchip_amp.o
- obj-$(CONFIG_ROCKCHIP_CPUINFO) += rockchip-cpuinfo.o
- obj-$(CONFIG_ROCKCHIP_GRF) += grf.o
