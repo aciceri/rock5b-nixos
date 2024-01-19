@@ -1,9 +1,10 @@
 {
   src,
   mesa,
+  prev,
   ...
 }:
-(mesa.override {
+(prev.mesa.override {
   enableOSMesa = false;
   vulkanDrivers = [];
   vulkanLayers = [];

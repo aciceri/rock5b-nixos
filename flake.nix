@@ -12,7 +12,6 @@
       url = "github:radxa/kernel/a9583fb47e9b96c552f458a376207141602c0025";
       flake = false;
     };
-    nixpkgs-kernel.url = "github:nixos/nixpkgs/f2537a505d45c31fe5d9c27ea9829b6f4c4e6ac5";
     panfork = {
       url = "gitlab:panfork/mesa";
       flake = false;
@@ -32,7 +31,6 @@
       imports = [
         ./modules
         ./packages
-        ./overlays
         ./apps
         ./formatting
       ];
