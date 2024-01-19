@@ -31,7 +31,6 @@
       imports = [
         ./modules
         ./packages
-        ./overlays
         ./apps
         ./formatting
       ];
