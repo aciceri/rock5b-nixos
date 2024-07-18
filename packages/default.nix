@@ -3,21 +3,17 @@
   inputs,
   ...
 }: {
+  imports = [
+    inputs.flake-parts.flakeModules.easyOverlay
+  ];
   perSystem = {
     lib,
     system,
     config,
     pkgs,
+    final,
     ...
   }: let
-    pkgsCross = import inputs.nixpkgs {
-      localSystem = system;
-      crossSystem = "aarch64-linux";
-    };
-    pkgsForKernelCross = import inputs.nixpkgs-kernel {
-      localSystem = system;
-      crossSystem = "aarch64-linux";
-    };
     evalConfig = import "${inputs.nixpkgs}/nixos/lib/eval-config.nix";
     buildConfig = hostSystem: config:
       evalConfig {
@@ -28,26 +24,21 @@
         ];
       };
   in {
-    packages = {
-      rootfs = (buildConfig system self.nixosModules.firstBoot).config.system.build.rootfsImage;
-
-      fan-control = pkgsCross.callPackage ./fan-control {
+    overlayAttrs = {
+      fan-control-rock5b = final.callPackage ./fan-control {
         src = "${inputs.fan-control.outPath}/src";
       };
-
-      linux-rock5b = pkgsForKernelCross.callPackage ./kernel {
+      linux-rock5b = final.callPackage ./kernel {
         src = inputs.kernel-src.outPath;
       };
-
-      panfork = pkgsCross.callPackage ./panfork {
-        src = inputs.panfork.outPath;
-      };
-
-      kodi = pkgsCross.callPackage ./kodi rec {
-        x11Support = false;
-        gbmSupport = true;
-        mesa = self.packages.aarch64-linux.panfork;
-      };
+    };
+    # export pkgsCross for building on a x86_64 machine
+    packages = builtins.mapAttrs (name: value: final.pkgsCross.aarch64-multiplatform.${value}) {
+      fan-control = "fan-control-rock5b";
+      linux-rock5b = "linux-rock5b";
+    } // {
+      # not injecting these into nixpkgs
+      rootfs = (buildConfig system self.nixosModules.firstBoot).config.system.build.rootfsImage;
 
       uboot =
         (import inputs.tow-boot {

@@ -6,8 +6,6 @@
   flake.nixosModules = {
     kernel = ./kernel;
 
-    panfork = ./panfork;
-
     fan-control = ./fan-control;
 
     cross = ./cross;
@@ -37,7 +35,6 @@
       imports = [
         self.nixosModules.apply-overlay
         self.nixosModules.kernel
-        self.nixosModules.panfork
         self.nixosModules.fan-control
       ];
     };
